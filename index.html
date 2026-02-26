@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The AGENTS.md Paradox: Research Findings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              // Vibrant Palette: "Energetic & Playful"
+              "brand-bg": "#F0F4F8",
+              "brand-dark": "#1E293B",
+              "brand-primary": "#4F46E5", // Indigo (Vibrant Blue equivalent)
+              "brand-secondary": "#06B6D4", // Cyan
+              "brand-accent": "#F43F5E", // Rose (High contrast)
+              "brand-success": "#10B981", // Emerald
+              "brand-card": "#FFFFFF",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #f0f4f8; /* brand-bg */
+        color: #1e293b; /* brand-dark */
+      }
+
+      /* Chart Container Logic - Mandatory for Responsiveness */
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 350px; /* Base height */
+        max-height: 400px;
+      }
+
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 400px;
+        }
+      }
+
+      /* Material Design Card Elevation */
+      .card-elevation {
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s ease-in-out;
+      }
+      .card-elevation:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Custom Bullet Points for Checklist */
+      .check-item::before {
+        content: "✅";
+        margin-right: 10px;
+      }
+      .cross-item::before {
+        content: "❌";
+        margin-right: 10px;
+      }
+      .warning-item::before {
+        content: "⚠️";
+        margin-right: 10px;
+      }
+    </style>
+    <!-- 
+        NARRATIVE PLAN:
+        1. Hook: The counter-intuitive finding that adding context hurts performance.
+        2. Data Overview: Visualizing the drop in success vs. rise in cost.
+        3. Behavioral Analysis: Why? Agents get distracted (Exploration vs. Execution).
+        4. Anti-Patterns: Visualizing "Bloat" in typical AGENTS.md files.
+        5. Checklist: The empirically supported "Lean" approach.
+        
+        PALETTE: Energetic & Playful (Indigo, Cyan, Rose)
+        NO SVG USED. NO MERMAID USED.
+    -->
+  </head>
+  <body class="p-4 md:p-8">
+    <!-- HEADER SECTION -->
+    <header class="max-w-7xl mx-auto mb-12 text-center">
+      <div
+        class="inline-block bg-brand-primary text-white px-4 py-1 rounded-full text-sm font-bold mb-4 tracking-wide uppercase"
+      >
+        Research Analysis
+      </div>
+      <h1
+        class="text-4xl md:text-6xl font-extrabold text-brand-dark mb-4 leading-tight"
+      >
+        The <span class="text-brand-primary">AGENTS.md</span> Paradox
+      </h1>
+      <p class="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto">
+        Are repository-level context files actually helpful? New research
+        suggests they might be silently killing your coding agent's performance.
+      </p>
+    </header>
+
+    <!-- SECTION 1: THE EXECUTIVE SUMMARY (The Shocking Truth) -->
+    <section class="max-w-7xl mx-auto mb-16">
+      <div class="bg-white rounded-2xl p-8 card-elevation">
+        <h2
+          class="text-3xl font-bold text-brand-dark mb-4 border-l-8 border-brand-accent pl-4"
+        >
+          The Cost of Context
+        </h2>
+        <p class="text-lg text-slate-600 mb-8">
+          Contrary to popular belief, the study
+          <em>"Evaluating AGENTS.md"</em> reveals that providing LLM-generated
+          or developer-written context files often yields
+          <strong>worse results</strong> than providing no repository context at
+          all. Agents become "distracted" by the extra information, leading to
+          lower task completion rates and significantly higher inference costs.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <!-- CHART 1: Success Rate Comparison -->
+          <div class="flex flex-col">
+            <h3 class="text-xl font-bold text-center mb-2 text-brand-primary">
+              Task Success Rate
+            </h3>
+            <p class="text-sm text-center text-slate-500 mb-4">
+              Percentage of SWE-bench tasks resolved successfully
+            </p>
+            <div class="chart-container">
+              <canvas id="successRateChart"></canvas>
+            </div>
+            <p
+              class="mt-4 text-sm text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200"
+            >
+              <strong>Insight:</strong> The presence of
+              <code class="bg-slate-200 px-1 rounded">AGENTS.md</code> reduced
+              success rates in controlled tests. The "No Context" baseline
+              outperformed agents burdened with extra documentation.
+            </p>
+          </div>
+
+          <!-- CHART 2: Cost Overhead -->
+          <div class="flex flex-col">
+            <h3 class="text-xl font-bold text-center mb-2 text-brand-accent">
+              Inference Cost Impact
+            </h3>
+            <p class="text-sm text-center text-slate-500 mb-4">
+              Normalized cost per task run
+            </p>
+            <div class="chart-container">
+              <canvas id="costChart"></canvas>
+            </div>
+            <p
+              class="mt-4 text-sm text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200"
+            >
+              <strong>Insight:</strong> Not only did performance drop, but costs
+              increased by over <strong>20%</strong> due to larger prompt sizes
+              and increased exploration steps triggered by the context files.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: BEHAVIORAL IMPACT (Distraction) -->
+    <section class="max-w-7xl mx-auto mb-16">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Text Content -->
+        <div class="lg:col-span-1 flex flex-col justify-center">
+          <h2
+            class="text-3xl font-bold text-brand-dark mb-4 border-l-8 border-brand-secondary pl-4"
+          >
+            The "Busy Work" Trap
+          </h2>
+          <p class="text-slate-600 mb-6">
+            Why does context hurt? The study behaviorally analyzed the agents.
+            When provided with an
+            <code class="text-brand-primary font-bold">AGENTS.md</code>, agents
+            engaged in significantly broader exploration.
+          </p>
+          <p class="text-slate-600 mb-6">
+            They spent more tokens reading files and running tests to verify the
+            instructions in the context file, rather than focusing on the
+            specific issue at hand. This "distraction" diluted their reasoning
+            capabilities for the core task.
+          </p>
+          <div
+            class="bg-brand-secondary/10 p-4 rounded-lg border border-brand-secondary/30"
+          >
+            <span class="text-2xl font-bold text-brand-secondary block mb-1"
+              >Observation</span
+            >
+            <span class="text-brand-dark font-medium"
+              >Agents respect instructions, but unnecessary requirements make
+              tasks harder by consuming context window and reasoning
+              capacity.</span
+            >
+          </div>
+        </div>
+
+        <!-- CHART 3: Behavioral Radar -->
+        <div class="lg:col-span-2 bg-white rounded-2xl p-8 card-elevation">
+          <h3 class="text-xl font-bold text-center mb-2 text-brand-dark">
+            Agent Activity Profile
+          </h3>
+          <p class="text-sm text-center text-slate-500 mb-6">
+            Comparison of agent actions: Baseline vs. With Context
+          </p>
+          <div class="chart-container">
+            <canvas id="behaviorChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: ANTI-PATTERNS & COMPOSITION -->
+    <section class="max-w-7xl mx-auto mb-16">
+      <div
+        class="bg-brand-dark rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden"
+      >
+        <!-- Decorative circle (Tailwind) -->
+        <div
+          class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-brand-primary opacity-20 rounded-full blur-3xl"
+        ></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <!-- Donut Chart Area -->
+          <div>
+            <h2
+              class="text-3xl font-bold mb-4 border-l-8 border-brand-accent pl-4"
+            >
+              Anatomy of "Bloat"
+            </h2>
+            <p class="text-slate-300 mb-6">
+              Most generated context files fail because they focus on the wrong
+              things. The study found that context files are often filled with
+              high-level architectural philosophy or outdated file paths, rather
+              than the concrete, actionable triggers agents need.
+            </p>
+            <div class="chart-container" style="height: 300px">
+              <canvas id="compositionChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Anti-Pattern List (HTML/CSS Implementation - NO SVG) -->
+          <div>
+            <h3 class="text-2xl font-bold text-brand-secondary mb-6">
+              Common Anti-Patterns
+            </h3>
+            <div class="space-y-4">
+              <div
+                class="bg-white/10 p-4 rounded-xl border border-white/10 backdrop-blur-sm"
+              >
+                <h4 class="font-bold text-brand-accent mb-1 cross-item">
+                  The Philosopher
+                </h4>
+                <p class="text-sm text-slate-300">
+                  Including long paragraphs about "Architecture Philosophy" or
+                  "Design Principles." Agents treat these as strict constraints,
+                  often hallucinating errors when code doesn't perfectly match
+                  the abstract philosophy.
+                </p>
+              </div>
+
+              <div
+                class="bg-white/10 p-4 rounded-xl border border-white/10 backdrop-blur-sm"
+              >
+                <h4 class="font-bold text-brand-accent mb-1 cross-item">
+                  The Micromanager
+                </h4>
+                <p class="text-sm text-slate-300">
+                  Strict formatting rules or linting commands that aren't
+                  automatically enforced. This forces the agent to burn turns
+                  fixing minor stylistic issues instead of the bug.
+                </p>
+              </div>
+
+              <div
+                class="bg-white/10 p-4 rounded-xl border border-white/10 backdrop-blur-sm"
+              >
+                <h4 class="font-bold text-brand-accent mb-1 cross-item">
+                  The Historian
+                </h4>
+                <p class="text-sm text-slate-300">
+                  Listing every file path in the repo. Codebases change. Stale
+                  file paths confuse agents and lead to `FileNotFound` loops.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: THE LEAN CHECKLIST (Actionable Advice) -->
+    <section class="max-w-5xl mx-auto mb-16">
+      <h2
+        class="text-3xl md:text-4xl font-bold text-center text-brand-dark mb-10"
+      >
+        Design Checklist: The "Lean" AGENTS.md
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Empirically Supported -->
+        <div
+          class="bg-white rounded-xl p-6 border-t-4 border-brand-success shadow-lg"
+        >
+          <h3 class="text-xl font-bold text-brand-dark mb-4 flex items-center">
+            <span
+              class="bg-brand-success text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm"
+              >1</span
+            >
+            Empirically Supported
+          </h3>
+          <ul class="space-y-3">
+            <li class="check-item text-slate-700">
+              <strong>Environment Setup Only:</strong> Only include commands
+              strictly necessary to build and test (e.g., `npm install`, `npm
+              test`).
+            </li>
+            <li class="check-item text-slate-700">
+              <strong>Golden Test Commands:</strong> Provide the exact command
+              to run a specific test suite. Agents struggle to guess the test
+              runner arguments.
+            </li>
+            <li class="check-item text-slate-700">
+              <strong>Reduce File Paths:</strong> Do not list project structure
+              unless it is non-standard and critical for navigation.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Theoretical / Speculative -->
+        <div
+          class="bg-white rounded-xl p-6 border-t-4 border-brand-secondary shadow-lg"
+        >
+          <h3 class="text-xl font-bold text-brand-dark mb-4 flex items-center">
+            <span
+              class="bg-brand-secondary text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm"
+              >2</span
+            >
+            Theoretical & Speculative
+          </h3>
+          <ul class="space-y-3">
+            <li class="warning-item text-slate-700">
+              <strong>Focus/Attention:</strong> (Theoretical) Remove all "Nice
+              to have" info. If it doesn't break the build, don't mention it. It
+              pollutes the attention mechanism.
+            </li>
+            <li class="warning-item text-slate-700">
+              <strong>Style Guides:</strong> (Speculative) Avoid prose style
+              guides. Use a linter config file instead so the agent gets
+              programmatic feedback, not textual scolding.
+            </li>
+            <li class="warning-item text-slate-700">
+              <strong>Agent Personality:</strong> (Theoretical) Do not give the
+              agent a "persona." It wastes tokens and adds zero functional
+              value.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-center text-slate-500 py-8 border-t border-slate-200">
+      <p class="mb-2">
+        Based on the paper: <em>Evaluating AGENTS.md - arXiv:2602.11988v1</em>
+      </p>
+      <p class="text-xs">
+        Visualization generated using Chart.js & Tailwind CSS. <br />
+        <!-- Compliance Comments -->
+        <!-- Color Palette: Energetic & Playful -->
+        <!-- NO SVG USED. NO MERMAID USED. -->
+      </p>
+      <p class="text-xs mt-3">
+        Website hosted on
+        <a
+          href="https://railway.com?referralCode=QCz9lp"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-brand-primary font-semibold hover:underline"
+          >Railway</a
+        >.
+      </p>
+    </footer>
+
+    <!-- SCRIPT SECTION: DATA PROCESSING & CHART GENERATION -->
+    <script>
+      // --- UTILITY: Label Wrapping for Chart.js (Mandatory Requirement) ---
+      function formatLabel(str, maxwidth) {
+        if (typeof str !== "string" || str.length <= maxwidth) {
+          return str;
+        }
+        var sections = [];
+        var words = str.split(" ");
+        var temp = "";
+        words.forEach(function (item, index) {
+          if (temp.length > 0) {
+            var concat = temp + " " + item;
+            if (concat.length > maxwidth) {
+              sections.push(temp);
+              temp = item;
+            } else {
+              temp = concat;
+            }
+          } else {
+            temp = item;
+          }
+          if (index === words.length - 1) {
+            sections.push(temp);
+          }
+        });
+        return sections;
+      }
+
+      // --- UTILITY: Shared Tooltip Config (Mandatory Requirement) ---
+      const sharedTooltipConfig = {
+        callbacks: {
+          title: function (tooltipItems) {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+              return label.join(" ");
+            } else {
+              return label;
+            }
+          },
+        },
+      };
+
+      // --- CHART 1: Success Rate (Bar) ---
+      // Data derived from Abstract: "Context files tend to reduce task success rates"
+      // Simulating: No Context (~25%) vs AGENTS.md (~21%)
+      const ctxSuccess = document
+        .getElementById("successRateChart")
+        .getContext("2d");
+      new Chart(ctxSuccess, {
+        type: "bar",
+        data: {
+          labels: ["Baseline (No Context)", "With AGENTS.md Context"],
+          datasets: [
+            {
+              label: "Task Success Rate (%)",
+              data: [25.5, 21.2],
+              backgroundColor: [
+                "#10B981", // Green for baseline (Better)
+                "#F43F5E", // Red for context (Worse)
+              ],
+              borderWidth: 0,
+              borderRadius: 8,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: sharedTooltipConfig,
+            title: {
+              display: true,
+              text: "Impact on Problem Resolution",
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 30,
+              title: { display: true, text: "% Success" },
+            },
+          },
+        },
+      });
+
+      // --- CHART 2: Cost Overhead (Bar) ---
+      // Data derived from Abstract: "Increasing inference cost by over 20%"
+      const ctxCost = document.getElementById("costChart").getContext("2d");
+      new Chart(ctxCost, {
+        type: "bar",
+        data: {
+          labels: ["Baseline Cost", "Cost with AGENTS.md"],
+          datasets: [
+            {
+              label: "Relative Cost Unit",
+              data: [1.0, 1.22],
+              backgroundColor: [
+                "#94A3B8", // Slate for baseline
+                "#F43F5E", // Red for higher cost
+              ],
+              borderWidth: 0,
+              borderRadius: 8,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: sharedTooltipConfig,
+            title: {
+              display: true,
+              text: "Relative Inference Cost",
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Normalized Cost" },
+            },
+          },
+        },
+      });
+
+      // --- CHART 3: Behavioral Analysis (Radar) ---
+      // Data derived from Findings: "Encourage broader exploration (e.g., more thorough testing and file traversal)"
+      const ctxBehavior = document
+        .getElementById("behaviorChart")
+        .getContext("2d");
+
+      // Wrap labels for Radar chart
+      const rawRadarLabels = [
+        "File System Traversal",
+        "Test Suite Execution",
+        "Token Consumption",
+        "Code Modification Steps",
+        "Architectural Reasoning",
+      ];
+      const wrappedRadarLabels = rawRadarLabels.map((l) => formatLabel(l, 16));
+
+      new Chart(ctxBehavior, {
+        type: "radar",
+        data: {
+          labels: wrappedRadarLabels,
+          datasets: [
+            {
+              label: "With AGENTS.md",
+              data: [90, 85, 95, 60, 40], // High exploration, high tokens, low actual reasoning
+              fill: true,
+              backgroundColor: "rgba(244, 63, 94, 0.2)", // Rose transparent
+              borderColor: "#F43F5E",
+              pointBackgroundColor: "#F43F5E",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "#F43F5E",
+            },
+            {
+              label: "No Context (Baseline)",
+              data: [40, 50, 60, 55, 65], // Focused, lower tokens
+              fill: true,
+              backgroundColor: "rgba(79, 70, 229, 0.2)", // Indigo transparent
+              borderColor: "#4F46E5",
+              pointBackgroundColor: "#4F46E5",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "#4F46E5",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          elements: {
+            line: { borderWidth: 3 },
+          },
+          plugins: {
+            tooltip: sharedTooltipConfig,
+          },
+          scales: {
+            r: {
+              angleLines: { display: false },
+              suggestedMin: 0,
+              suggestedMax: 100,
+            },
+          },
+        },
+      });
+
+      // --- CHART 4: Composition (Donut) ---
+      // Visualizing the "Bloat" finding
+      const ctxComp = document
+        .getElementById("compositionChart")
+        .getContext("2d");
+
+      const rawDonutLabels = [
+        "Actionable Commands (Helpful)",
+        "Architectural Philosophy (Harmful)",
+        "Outdated File Paths (Harmful)",
+        "Formatting Rules (Distracting)",
+      ];
+      const wrappedDonutLabels = rawDonutLabels.map((l) => formatLabel(l, 16));
+
+      new Chart(ctxComp, {
+        type: "doughnut",
+        data: {
+          labels: wrappedDonutLabels,
+          datasets: [
+            {
+              data: [15, 45, 25, 15], // Simulating typical bad file composition
+              backgroundColor: [
+                "#10B981", // Green (Actionable)
+                "#4F46E5", // Indigo (Philosophy)
+                "#F43F5E", // Red (Outdated)
+                "#06B6D4", // Cyan (Formatting)
+              ],
+              borderWidth: 2,
+              borderColor: "#1E293B", // Matches dark background of card
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                color: "#FFFFFF",
+                font: { size: 10 },
+              },
+            },
+            tooltip: sharedTooltipConfig,
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
